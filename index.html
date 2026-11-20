@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#070811" />
+    <meta name="description" content="Explore the rain-soaked neon city of Afterlight in a first-person sci-fi adventure." />
+    <title>AFTERLIGHT // A city awake</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main id="game">
+      <div id="game-view" aria-label="First-person 3D game"></div>
+      <div class="vignette" aria-hidden="true"></div>
+      <div class="scanlines" aria-hidden="true"></div>
+
+      <header class="topbar hud">
+        <a class="wordmark" href="#" aria-label="Afterlight home"><span class="wordmark-mark">A</span><span>AFTER<span class="wordmark-accent">LIGHT</span></span></a>
+        <div class="location"><span class="live-dot"></span><span>NEW LUMEN</span><span class="location-divider">/</span><span>SECTOR 07</span></div>
+        <div class="clock"><span id="city-clock">23:47</span><span class="clock-weather"><span class="weather-icon">⌁</span> ACID RAIN</span></div>
+      </header>
+
+      <section class="mission hud" aria-live="polite">
+        <div class="eyebrow"><span class="eyebrow-line"></span> ACTIVE CONTRACT <span class="mission-id">#07-NEON</span></div>
+        <h1 id="mission-title">A SIGNAL<br /><span>IN THE STATIC</span></h1>
+        <p id="mission-copy">Three relay beacons went dark. Find them. Bring the district back online.</p>
+        <div class="objective-progress">
+          <div class="progress-label"><span>GRID RELAYS</span><span id="relay-count">00 <span class="progress-total">/ 03</span></span></div>
+          <div class="progress-track"><span id="progress-fill"></span></div>
+          <div id="relay-list" class="relay-list">
+            <span class="relay-item"><i></i> EAST MARKET</span>
+            <span class="relay-item"><i></i> THE UNDERPASS</span>
+            <span class="relay-item"><i></i> OLD TOWER</span>
+          </div>
+          <div class="quest-list">
+            <div class="quest-heading"><span>FIELD OBJECTIVES</span><span>NL—07</span></div>
+            <div class="quest-row" id="quest-relays"><span class="quest-index">01</span><span class="quest-copy">Restore grid relays</span><b id="quest-relays-count">00/03</b></div>
+            <div class="quest-row" id="quest-enemies"><span class="quest-index">02</span><span class="quest-copy">Disable security drones</span><b id="quest-enemies-count">00/05</b></div>
+            <div class="quest-row locked" id="quest-tower"><span class="quest-index">03</span><span class="quest-copy">Breach Helix Tower</span><b id="quest-tower-status">LOCKED</b></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="coordinates hud" aria-label="Player coordinates">
+        <span class="coord-label">POSITION</span>
+        <span id="coordinates">X 000 <span class="coord-separator">/</span> Z 000</span>
+      </section>
+
+      <div class="crosshair" aria-hidden="true"><span></span><i></i></div>
+      <div id="interaction-prompt" class="interaction-prompt" aria-live="polite"><span class="keycap">E</span><span id="interaction-label">RESTORE RELAY</span></div>
+
+      <section class="combat-panel hud" aria-label="Weapon and player status">
+        <div class="combat-heading">
+          <div class="weapon-label"><span class="weapon-symbol">⌁</span><span>AKIMBO PISTOLS<small>MK-II / CHARGED</small></span></div>
+          <div class="ammo-readout"><b id="ammo-current">12</b><span>/</span><span id="ammo-reserve">48</span></div>
+        </div>
+        <div class="health-heading"><span>VITALS</span><span id="health-value">100%</span></div>
+        <div class="health-track"><span id="health-fill"></span></div>
+        <div class="target-readout"><span id="target-name">NO HOSTILE IN SIGHTS</span><span id="enemy-count">07 HOSTILES</span></div>
+      </section>
+
+      <aside class="inventory-panel hud" aria-label="Inventory and concealment">
+        <div class="inventory-heading"><span>FIELD LOADOUT</span><span id="concealment-state">CONCEALED</span></div>
+        <div id="inventory-pistols" class="inventory-slot selected"><span class="inventory-key">1</span><span>AKIMBO PISTOLS</span><b>12 / 48</b></div>
+        <div id="inventory-knife" class="inventory-slot"><span class="inventory-key">2</span><span>THROWING KNIFE</span><b id="knife-status">READY</b></div>
+        <div class="inventory-controls">Q DRAW / HOLSTER <span>·</span> RMB THROW KNIFE</div>
+      </aside>
+
+      <aside class="minimap-panel hud" aria-label="City map">
+        <div class="minimap-heading"><span>DISTRICT MAP</span><span class="map-live"><i></i> LIVE</span></div>
+        <canvas id="minimap" width="180" height="180"></canvas>
+        <div class="map-legend"><span><i class="legend-hostile"></i> HOSTILE</span><span><i class="legend-civilian"></i> CIVILIAN</span><span><i class="legend-tower"></i> TOWER</span></div>
+        <div class="map-footer"><span>SECTOR 07 / NL</span><span>N <b>↑</b></span></div>
+      </aside>
+
+      <footer class="bottombar hud">
+        <div class="controls-hint">
+          <div class="key-cluster"><span class="keycap">W</span><span class="key-row"><span class="keycap">A</span><span class="keycap">S</span><span class="keycap">D</span></span></div>
+          <span class="hint-label">MOVE</span>
+          <span class="hint-divider sprint-divider"></span>
+          <span class="keycap wide sprint-key">SHIFT</span><span class="hint-label sprint-label">SPRINT</span>
+          <span class="hint-divider jump-divider"></span>
+          <span class="keycap jump-key">SPACE</span><span class="hint-label jump-label">JUMP</span>
+          <span class="hint-divider weapon-divider"></span>
+          <span class="keycap mouse-key fire-key">LMB</span><span class="hint-label fire-label">FIRE</span>
+          <span class="keycap reload-key">R</span><span class="hint-label reload-label">RELOAD</span>
+          <span class="hint-divider knife-divider"></span>
+          <span class="keycap mouse-key knife-key">RMB</span><span class="hint-label knife-label">THROW</span>
+        </div>
+        <div class="comms"><span class="comms-icon">◈</span><span id="comms-text">LOCAL NETWORK <b>CONNECTED</b></span></div>
+        <button id="pause-button" class="pause-button" type="button" aria-label="Pause game"><span>Ⅱ</span> <span>PAUSE</span></button>
+      </footer>
+
+      <section id="start-screen" class="screen">
+        <div class="screen-card">
+          <div class="screen-kicker"><span class="live-dot"></span> AN INTERACTIVE NIGHT DRIVE</div>
+          <div class="title-lockup"><span class="title-overline">WELCOME TO</span><h2>AFTER<span>LIGHT</span></h2><div class="title-slash">A CITY THAT NEVER<br />LEARNED TO SLEEP.</div></div>
+          <p class="screen-copy">Rain on the pavement. Neon in the fog. Restore the relays, watch for hostile drones, and keep the district alive. Draw only when you mean to be seen.</p>
+          <button id="start-button" class="primary-button" type="button"><span>ENTER THE CITY</span><span class="button-arrow">↗</span></button>
+          <div class="start-footnote"><span>WASD MOVE</span><span>·</span><span>Q DRAW / HOLSTER</span><span>·</span><span>1/2 LOADOUT</span></div>
+        </div>
+        <div class="screen-decoration decoration-top">NL—07 / 2096</div>
+        <div class="screen-decoration decoration-bottom">NO SAFE ROUTE. MAKE YOUR OWN.</div>
+      </section>
+
+      <section id="pause-screen" class="screen hidden">
+        <div class="screen-card pause-card">
+          <div class="screen-kicker"><span class="live-dot"></span> SIMULATION PAUSED</div>
+          <div class="title-lockup"><span class="title-overline">TAKE A BREATH</span><h2>STILL<span> HERE.</span></h2></div>
+          <p class="screen-copy">The city can wait. Your signal is still out there.</p>
+          <button id="resume-button" class="primary-button" type="button"><span>BACK TO THE STREETS</span><span class="button-arrow">↗</span></button>
+          <div class="start-footnote"><span>WASD MOVE</span><span>·</span><span>LMB FIRE</span><span>·</span><span>R RELOAD</span><span>·</span><span>ESC PAUSE</span></div>
+        </div>
+        <div class="screen-decoration decoration-top">NL—07 / 2096</div>
+        <div class="screen-decoration decoration-bottom">NO SAFE ROUTE. MAKE YOUR OWN.</div>
+      </section>
+
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="./game.js"></script>
+  </body>
+</html>
